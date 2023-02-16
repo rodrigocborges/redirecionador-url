@@ -1,14 +1,18 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { User } from '@prisma/client';
 import { Request } from 'express';
+import { GetUser } from '../auth/decorator';
+import { JwtGuard } from '../auth/guard';
 
 @Controller('users')
 export class UserController {
 
-    @UseGuards(AuthGuard('jwt')) //`jwt` é o nome passado no JwtStrategy, por padrão é esse, mas é configurável
+    @UseGuards(JwtGuard) 
     @Get('me')
-    async getMe(@Req() req: Request) {
-        return req.user;
+    async getMe(@GetUser() user: User) { //@Req() req: Request
+        return user;
     }
+
+
 
 }
